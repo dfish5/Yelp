@@ -1,0 +1,455 @@
+Profiling and Analyzing the Yelp Dataset Worksheet
+
+
+Part 1: Yelp Dataset Profiling and Understanding
+
+1. Profile the data by finding the total number of records for each of the tables below:
+
+SELECT 
+count(business_id) as NumRecords
+FROM attribute
+--code to find total records for other tables is similar
+
+	
+i. Attribute table = 10000
+ii. Business table = 10000
+iii. Category table = 10000
+iv. Checkin table = 10000
+v. elite_years table = 10000
+vi. friend table = 10000
+vii. hours table = 10000
+viii. photo table = 10000
+ix. review table = 10000
+x. tip table = 10000
+xi. user table = 10000
+	
+
+
+2. Find the total distinct records by either the foreign key or primary key for each table. If two foreign keys are listed in the table, please specify which foreign key.
+
+SELECT 
+count(DISTINCT id) as numDistinct
+FROM business
+--code to find distinct records for other tables is similar
+
+i. Business = 10000
+ii. Hours = 1562
+iii. Category = 2643
+iv. Attribute = 1115
+v. Review = 10000 using the primary key id
+vi. Checkin = 493
+vii. Photo = 6493
+viii. Tip = 3979 using the foreign key user_id
+ix. User = 10000
+x. Friend = 11
+xi. Elite_years = 2780
+
+Note: Primary Keys are denoted in the ER-Diagram with a yellow key icon.	
+
+
+
+3. Are there any columns with null values in the Users table? Indicate "yes," or "no."
+
+	Answer: no
+	
+	
+	SQL code used to arrive at answer:
+-- 	if there are null values, then case when maps them to the value 1, otherwise 0 
+--  then sum to find total number of nulls 
+SELECT 
+sum(case when name is null then 1 else 0 end) as name,
+sum(case when review_count is null then 1 else 0 end) as review_count,
+sum(case when yelping_since is null then 1 else 0 end) as yelping_since,
+sum(case when useful is null then 1 else 0 end) as useful,
+sum(case when funny is null then 1 else 0 end) as funny,
+sum(case when cool is null then 1 else 0 end) as cool,
+sum(case when fans is null then 1 else 0 end) as fans,
+sum(case when average_stars is null then 1 else 0 end) as average_stars,
+sum(case when compliment_hot is null then 1 else 0 end) as compliment_hot,
+sum(case when compliment_more is null then 1 else 0 end) as compliment_more,
+sum(case when compliment_profile is null then 1 else 0 end) as compliment_profile,
+sum(case when compliment_cute is null then 1 else 0 end) as compliment_cute,
+sum(case when compliment_list is null then 1 else 0 end) as compliment_list,
+sum(case when compliment_note is null then 1 else 0 end) as compliment_note,
+sum(case when compliment_plain is null then 1 else 0 end) as compliment_plain,
+sum(case when compliment_cool is null then 1 else 0 end) as compliment_cool,
+sum(case when compliment_funny is null then 1 else 0 end) as compliment_funny,
+sum(case when compliment_writer is null then 1 else 0 end) as compliment_writer,
+sum(case when compliment_photos is null then 1 else 0 end) as compliment_photos
+From user	
+	
+
+	
+4. For each table and column listed below, display the smallest (minimum), largest (maximum), and average (mean) value for the following fields:
+
+	i. Table: Review, Column: Stars
+	
+		min: 1		max: 5		avg: 3.7082
+		
+	
+	ii. Table: Business, Column: Stars
+	
+		min: 1		max: 5		avg: 3.6549
+		
+	
+	iii. Table: Tip, Column: Likes
+	
+		min: 0		max: 2		avg: 0.0144
+		
+	
+	iv. Table: Checkin, Column: Count
+	
+		min: 1		max: 53		avg: 1.9414
+		
+	
+	v. Table: User, Column: Review_count
+	
+		min: 0		max: 2000		avg: 24.2995
+		
+
+
+5. List the cities with the most reviews in descending order: 
+
+	SQL code used to arrive at answer:
+	
+SELECT 
+city, 
+SUM(review_count) AS review_count
+FROM business
+GROUP BY city
+ORDER BY review_count DESC	
+	
+	Copy and Paste the Result Below:
+	
++-----------------+--------------+
+| city            | review_count |
++-----------------+--------------+
+| Las Vegas       |        82854 |
+| Phoenix         |        34503 |
+| Toronto         |        24113 |
+| Scottsdale      |        20614 |
+| Charlotte       |        12523 |
+| Henderson       |        10871 |
+| Tempe           |        10504 |
+| Pittsburgh      |         9798 |
+| Montréal        |         9448 |
+| Chandler        |         8112 |
+| Mesa            |         6875 |
+| Gilbert         |         6380 |
+| Cleveland       |         5593 |
+| Madison         |         5265 |
+| Glendale        |         4406 |
+| Mississauga     |         3814 |
+| Edinburgh       |         2792 |
+| Peoria          |         2624 |
+| North Las Vegas |         2438 |
+| Markham         |         2352 |
+| Champaign       |         2029 |
+| Stuttgart       |         1849 |
+| Surprise        |         1520 |
+| Lakewood        |         1465 |
+| Goodyear        |         1155 |
++-----------------+--------------+
+	
+6. Find the distribution of star ratings to the business in the following cities:
+
+i. Avon
+
+SQL code used to arrive at answer:
+
+Select
+stars,
+count(stars) as count
+From business
+Where city = 'Avon'
+Group by stars
+
+Copy and Paste the Resulting Table Below (2 columns â€“ star rating and count):
+
++-------+-------+
+| stars | count |
++-------+-------+
+|   1.5 |     1 |
+|   2.5 |     2 |
+|   3.5 |     3 |
+|   4.0 |     2 |
+|   4.5 |     1 |
+|   5.0 |     1 |
++-------+-------+
+
+ii. Beachwood
+
+SQL code used to arrive at answer:
+
+Select
+stars,
+count(stars) as count
+From business
+Where city = 'Beachwood'
+Group by stars
+
+Copy and Paste the Resulting Table Below (2 columns â€“ star rating and count):
+		
++-------+-------+
+| stars | count |
++-------+-------+
+|   2.0 |     1 |
+|   2.5 |     1 |
+|   3.0 |     2 |
+|   3.5 |     2 |
+|   4.0 |     1 |
+|   4.5 |     2 |
+|   5.0 |     5 |
++-------+-------+
+
+7. Find the top 3 users based on their total number of reviews:
+		
+	SQL code used to arrive at answer:
+
+Select 
+name,
+review_count
+From user
+Order by review_count DESC
+Limit 3	
+		
+	Copy and Paste the Result Below:
+		
++--------+--------------+
+| name   | review_count |
++--------+--------------+
+| Gerald |         2000 |
+| Sara   |         1629 |
+| Yuri   |         1339 |
++--------+--------------+
+
+8. Does posing more reviews correlate with more fans?
+
+	Please explain your findings and interpretation of the results:
+-- let's look at review counts by number of fans. First by fewest fans, then most fans.
+Select
+review_count,
+fans
+From user
+group by fans	
+
+review_count,
+fans
+From user
+group by fans 
+Order by fans DESC
+
+--from these tables, we can deduce that they are possibly correlated - the higher the fans, the higher the review count.
+
++--------------+------+
+| review_count | fans |
++--------------+------+
+|            1 |    0 |
+|            9 |    1 |
+|           60 |    2 |
+|           32 |    3 |
+|          104 |    4 |
+|          134 |    5 |
+|           80 |    6 |
+|          156 |    7 |
+|           53 |    8 |
+|          118 |    9 |
+|           69 |   10 |
+|          142 |   11 |
+|           95 |   12 |
+|           95 |   13 |
+|          131 |   14 |
+|          104 |   15 |
+|          152 |   16 |
+|          277 |   17 |
+|          378 |   18 |
+|          512 |   19 |
+|          161 |   20 |
+|          168 |   21 |
+|          289 |   22 |
+|          348 |   23 |
+|          643 |   24 |
++--------------+------+
+
++--------------+------+ 
+| review_count | fans |
++--------------+------+
+|          609 |  503 |
+|          968 |  497 |
+|         1153 |  311 |
+|         2000 |  253 |
+|          930 |  173 |
+|          813 |  159 |
+|          377 |  133 |
+|         1215 |  126 |
+|          862 |  124 |
+|          834 |  120 |
+|          861 |  115 |
+|          408 |  111 |
+|          255 |  105 |
+|         1039 |  104 |
+|         1246 |  101 |
+|          307 |   96 |
+|          584 |   89 |
+|          842 |   85 |
+|          220 |   84 |
+|          408 |   81 |
+|          178 |   80 |
+|          754 |   78 |
+|         1339 |   76 |
+|          160 |   73 |
+|            7 |   70 |
++--------------+------+
+	
+9. Are there more reviews with the word "love" or with the word "hate" in them?
+
+	Answer: Love
+
+	
+	SQL code used to arrive at answer:
+	
+-- number of reviews with "love"
+Select
+count(text) as numLove
+From review
+Where text like '%love%'
+
+--number of reviews with "hate"
+Select
+count(text) as numHate
+From review
+Where text like '%hate%'
+	
+	
+10. Find the top 10 users with the most fans:
+
+	SQL code used to arrive at answer:
+
+Select
+name,
+fans
+from user
+Order by fans DESC
+Limit 10	
+	
+	Copy and Paste the Result Below:
+
++-----------+------+
+| name      | fans |
++-----------+------+
+| Amy       |  503 |
+| Mimi      |  497 |
+| Harald    |  311 |
+| Gerald    |  253 |
+| Christine |  173 |
+| Lisa      |  159 |
+| Cat       |  133 |
+| William   |  126 |
+| Fran      |  124 |
+| Lissa     |  120 |
++-----------+------+	
+		
+
+Part 2: Inferences and Analysis
+
+1. Pick one city and category of your choice and group the businesses in that city or category by their overall star rating. Compare the businesses with 2-3 stars to the businesses with 4-5 stars and answer the following questions. Include your code.
+	
+i. Do the two groups you chose to analyze have a different distribution of hours?
+Yes, lower rated food are open longer - 8:00 to 22:00 compared to 10:00 to 19:00 for the higher rated food.
+
+ii. Do the two groups you chose to analyze have a different number of reviews?
+Yes, the higher rated group has more reviews.         
+         
+iii. Are you able to infer anything from the location data provided between these two groups? Explain.
+From the location data, the lower rated group is located North West of the higher rated group.
+
+SQL code used for analysis:
+
+Select
+b.city,
+b.longitude,
+b.latitude,
+c.category,
+h.hours,
+b.review_count,
+case 
+    when b.stars between 2 and 3 then '2-3' 
+    when b.stars between 4 and 5 then '4-5'
+    else 'Other' end 
+    as stars
+from business b 
+    inner join category c
+    on b.id = c.business_id
+        inner join hours h
+        on b.id = h.business_id
+Where city = 'Las Vegas' and category = 'Food'
+		
+		
+2. Group business based on the ones that are open and the ones that are closed. What differences can you find between the ones that are still open and the ones that are closed? List at least two differences and the SQL code you used to arrive at your answer.
+		
+i. Difference 1: Open businesses have higher average review counts
+         
+         
+ii. Difference 2: Open businesses are cooler on average
+         
+         
+         
+SQL code used for analysis:
+
+Select
+b.is_open,
+avg(b.review_count) as avg_review_count,
+avg(r.cool) as avg_cool
+From business b 
+    inner join review r
+    on b.id = r.id
+group by is_open
+
++---------+------------------+----------------+
+| is_open | avg_review_count |       avg_cool |
++---------+------------------+----------------+
+|       0 |              4.0 |            0.0 |
+|       1 |    38.7692307692 | 0.384615384615 |
++---------+------------------+----------------+
+	
+	
+3. For this last part of your analysis, you are going to choose the type of analysis you want to conduct on the Yelp dataset and are going to prepare the data for analysis.
+
+Ideas for analysis include: Parsing out keywords and business attributes for sentiment analysis, clustering businesses to find commonalities or anomalies between them, predicting the overall star rating for a business, predicting the number of fans a user will have, and so on. These are just a few examples to get you started, so feel free to be creative and come up with your own problem you want to solve. Provide answers, in-line, to all of the following:
+	
+i. Indicate the type of analysis you chose to do:
+I want to see how reviews vary between states.         
+         
+ii. Write 1-2 brief paragraphs on the type of data you will need for your analysis and why you chose that data:
+For my analysis, I will need to gather the reviews of each business and which state the businesses are located.
+In particular, I will sum the features useful, funny, and cool from the review table and compare this total by state
+to find which state has more positive reviews. In addition, I will see how this correlates to the stars of the review.                     
+                  
+iii. Output of your finished dataset:
+
++-------+---------------+-------+
+| state | numPosReviews | stars |
++-------+---------------+-------+
+| AZ    |             4 |     1 |
+| NC    |             1 |     3 |
+| NV    |             5 |     4 |
+| NV    |             2 |     5 |
+| AZ    |             1 |     5 |
+| NV    |             2 |     5 |
+| WI    |             2 |     5 |
++-------+---------------+-------+         
+         
+iv. Provide the SQL code you used to create your final dataset:
+
+Select
+b.state,
+r.useful + r.funny + r.cool as numPosReviews,
+r.stars
+From business b 
+    inner join review r
+    on b.id = r.id
+Where numPosReviews > 0
+Order by r.stars
+
+In conclusion, it looks like reviews that give businesses low stars is correlated to a more positive reaction. 
+Also, Nevada has the most review reactions followed by Arizona.
